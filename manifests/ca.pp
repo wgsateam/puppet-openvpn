@@ -62,14 +62,12 @@ define openvpn::ca (
     mode   => '0750'
   })
 
-  file { "${etc_directory}/openvpn/${name}/easy-rsa" :
-    ensure             => directory,
-    recurse            => true,
-    links              => 'follow',
-    source_permissions => 'use',
-    group              => 0,
-    source             => "file:${openvpn::easyrsa_source}",
-    require            => File["${etc_directory}/openvpn/${name}"],
+  file { "${etc_directory}/openvpn/${name}/easy-rsa":
+    ensure  => directory,
+    recurse => true,
+    links   => 'follow',
+    source  => $openvpn::easyrsa_source,
+    require => File["${etc_directory}/openvpn/${name}"],
   }
 
   file { "${etc_directory}/openvpn/${name}/easy-rsa/revoked":
@@ -151,6 +149,12 @@ define openvpn::ca (
             'key_ou'         => $key_ou,
           }
         ),
+        require => File["${etc_directory}/openvpn/${name}/easy-rsa"],
+      }
+
+      file { "${etc_directory}/openvpn/${name}/easy-rsa/easyrsa":
+        ensure  => file,
+        mode    => '0550',
         require => File["${etc_directory}/openvpn/${name}/easy-rsa"],
       }
 
