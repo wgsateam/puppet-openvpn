@@ -70,7 +70,11 @@ define openvpn::ca (
     require => File["${etc_directory}/openvpn/${name}"],
   }
 
-  file { "${etc_directory}/openvpn/${name}/easy-rsa/revoked":
+  file { [
+    "${etc_directory}/openvpn/${name}/easy-rsa/revoked",
+    "${etc_directory}/openvpn/${name}/easy-rsa/keys/reqs",
+    "${etc_directory}/openvpn/${name}/easy-rsa/keys/certs_by_serial"
+  ]:
     ensure  => directory,
     mode    => '0750',
     recurse => true,
